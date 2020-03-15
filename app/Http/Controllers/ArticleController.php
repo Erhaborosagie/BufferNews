@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Article;
 use Illuminate\Http\Request;
 
-class ArticlesController extends Controller
+class ArticleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,7 +25,7 @@ class ArticlesController extends Controller
      */
     public function store(Request $request)
     {
-        $article = Article::create($request->all());
+        $article = auth()->user()->articles()->create($request->all());
 
         return response()->json($article, 201);
     }
