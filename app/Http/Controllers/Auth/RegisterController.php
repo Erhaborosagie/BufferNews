@@ -77,13 +77,10 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
-        Log::info("First");
 
         event(new Registered($user = $this->create($request->all())));
-        Log::info("Sec");
 
         $this->guard()->login($user);
-        Log::info("Thir");
 
         return $this->registered($request, $user)
             ?: redirect($this->redirectPath());
