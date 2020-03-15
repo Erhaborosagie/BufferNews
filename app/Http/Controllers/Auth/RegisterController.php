@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
@@ -71,5 +74,25 @@ class RegisterController extends Controller
         ]);
     }
 
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+        Log::info("First");
 
+        event(new Registered($user = $this->create($request->all())));
+        Log::info("Sec");
+
+        $this->guard()->login($user);
+        Log::info("Thir");
+
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());
+    }
+
+    protected function registered(Request $request, $user)
+    {
+        $user->generateToken();
+
+        return response()->json(['data' => $user->toArray()], 201);
+    }
 }
