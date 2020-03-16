@@ -24,7 +24,10 @@ Route::group(['middleware' => ['return-json']],function(){
     Route::group(['middleware' => 'auth:api'], function() {
         Route::post('articles', 'ArticleController@store');
         Route::put('articles/{article}', 'ArticleController@update');
-        Route::delete('articles/{article}', 'ArticleController@delete');
+        Route::delete('articles/{article}', 'ArticleController@destroy');
+        Route::get('users', 'UserController@index');
+        Route::put('users/{user}', 'UserController@update');
+        Route::get('users/{user}', 'UserController@show');
     });
 
     Route::post('register', 'Auth\RegisterController@register');
