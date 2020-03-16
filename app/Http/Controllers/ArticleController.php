@@ -25,9 +25,13 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        if (auth()->user()->role == "user"){
+            return response()->json(["message" => "You have no permission to do this"], 403);
+        }
         $article = auth()->user()->articles()->create($request->all());
 
         return response()->json($article, 201);
+
     }
 
     /**
@@ -51,6 +55,9 @@ class ArticleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (auth()->user()->role == "user"){
+            return response()->json(["message" => "You have no permission to do this"], 403);
+        }
         $article = Article::findOrFail($id);
         $article->update($request->all());
 
@@ -65,6 +72,9 @@ class ArticleController extends Controller
      */
     public function destroy($id)
     {
+        if (auth()->user()->role == "user"){
+            return response()->json(["message" => "You have no permission to do this"], 403);
+        }
         $article = Article::findOrFail($id);
         $article->delete();
 
